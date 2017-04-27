@@ -4,10 +4,9 @@ namespace todo\functions;
 //Автозагрузка классов
 function autoloadClass($className)
 {
-  $className = __DIR__ . str_replace('\\', DIRECTORY_SEPARATOR, $className);
-  $dir = 'wwwtodo';
-  $fileName  = str_replace($dir, 'www', $className) . '.class.php';
-
+  $className = str_replace('\\',DIRECTORY_SEPARATOR, $className);
+  $namespace = 'todo' . DIRECTORY_SEPARATOR;
+  $fileName = str_replace($namespace, '', $className) . '.class.php';
   if (file_exists($fileName)) {
     require $fileName;
   } else {

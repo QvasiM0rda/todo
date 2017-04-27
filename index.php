@@ -1,7 +1,6 @@
 <?php
 namespace todo;
 use todo\classes\myPDO;
-use function todo\functions\output;
 include 'function.php';
 error_reporting(E_ALL);
 
@@ -78,7 +77,7 @@ if (!empty($_POST['sort'])) {
       <th></th>
     </tr>
     <?php
-      output($statement);
+     functions\output($statement);
     ?>
   </table>
 </body>
