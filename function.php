@@ -1,4 +1,21 @@
 <?php
+namespace todo\functions;
+
+//Автозагрузка классов
+function autoloadClass($className)
+{
+  $className = __DIR__ . str_replace('\\', DIRECTORY_SEPARATOR, $className);
+  $dir = 'wwwtodo';
+  $fileName  = str_replace($dir, 'www', $className) . '.class.php';
+
+  if (file_exists($fileName)) {
+    require $fileName;
+  } else {
+    echo 'Файл не найден ' . $fileName .'<br>';
+  }
+}
+
+spl_autoload_register('todo\functions\autoloadClass');
 
 //Вывод данных из БД
 function output($array){
@@ -20,23 +37,4 @@ function output($array){
           </td>';
     echo '</tr>';
   }
-}
-
-//Выполнение или удаление задания, в зависимости от нажатой ссылки
-function editTask($action) {
-  $sql = '';
-  if ($action === 'execute') {
-    $sql = 'UPDATE tasks SET is_done = 1 WHERE id = ?';
-  }
-  if ($action === 'delete') {
-    $sql = 'DELETE FROM tasks WHERE id = ?';
-  }
-  return $sql;
-}
-
-//Обработка скрипта
-function statement($pdo, $script, $argument) {
-  $statement = $pdo->prepare($script);
-  $statement->execute([$argument]);
-  return $statement;
 }

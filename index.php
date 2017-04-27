@@ -1,6 +1,52 @@
 <?php
-include 'query.php';
+namespace todo;
+use todo\classes\myPDO;
+use function todo\functions\output;
+include 'function.php';
 error_reporting(E_ALL);
+
+$pdo = new myPDO('mysql:host=localhost;dbname=kerimov;charset=utf8', 'kerimov', 'neto0990');
+
+//Добавление задания
+if (!empty($_POST['add'])) {
+  $pdo->insert($_POST['task']);
+}
+
+//Выполнение или удаление задания, в зависимости от нажатой ссылки
+if (!empty($_GET)) {
+  if ($_GET['action'] === 'execute') {
+    $pdo->updateIsDone($_GET['id']);
+  }
+  if ($_GET['action'] === 'delete') {
+    $pdo->delete($_GET['id']);
+  }
+}
+
+//Подгрузка описания задания, выбранного для редактирования
+if (!empty($_GET['action']) && $_GET['action'] === 'edit') {
+  $taskValue = $pdo->selectTaskById($_GET['id']);
+  $taskButtonValue = 'Сохранить'; //Изменение текста кнопки для редактирования
+  $taskButtonName = 'save'; //Изменение имени кнопки для редактирования
+} else {
+  $taskValue = ''; //Изменение содержимого текстового поля для добавления
+  $taskButtonValue = 'Добавить'; //Изменение текста кнопки для добавления
+  $taskButtonName = 'add'; //Изменение имени кнопки для добавления
+}
+
+//Редактирование описания задания
+if (!empty($_POST['save'])) {
+  $pdo->updateDescription($_POST['task'], $_GET['id']);
+  header('Location: index.php');
+  die;
+}
+
+//Сортировка по одному из трёх параметров, если они выбраны, или по id
+if (!empty($_POST['sort'])) {
+  $statement = $pdo->select($_POST['sort']);
+} else {
+  $statement = $pdo->select('id');
+}
+
 ?>
 
 <!doctype html>

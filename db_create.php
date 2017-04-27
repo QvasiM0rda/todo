@@ -1,14 +1,15 @@
 <?php
+namespace todo;
+use todo\classes\myPDO;
 
-$pdo = new PDO('mysql:host=localhost;dbname=kerimov', 'kerimov', 'neto0990');
-$pdo->exec("SET NAMES utf8");
+$pdo = new myPDO('mysql:host=localhost;dbname=kerimov;charset=utf8', 'kerimov', 'neto0990');
 
-$drop = "DROP TABLE IF EXISTS `tasks`";
-$statement = $pdo->prepare($drop);
+$drop = "DROP TABLE IF EXISTS tasks";
+$statement = $pdo->prepareStatement($drop, '');
 if ($statement->execute()) {
-  echo 'Таблица tasks успешно удалена';
+  echo 'Таблица tasks успешно удалена<br>';
 } else {
-  echo 'Ошибка при удалении Таблица tasks ';
+  echo 'Ошибка при удалении таблицы tasks <br>';
 }
 
 $create = "CREATE TABLE tasks (
@@ -19,10 +20,10 @@ $create = "CREATE TABLE tasks (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
-$statement = $pdo->prepare($create);
+$statement = $pdo->prepareStatement($create, '');
 if ($statement->execute()) {
-  echo 'Таблица tasks успешно создана';
+  echo 'Таблица tasks успешно создана<br>';
   echo '<a href="index.php">Перейти к списку дел</a>';
 } else {
-  echo 'Ошибка при создании Таблица tasks ';
+  echo 'Ошибка при создании таблицы tasks <br>';
 }
